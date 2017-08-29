@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd">
+ 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="1" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="location">
+            <value>classpath:activemq.properties</value>
+        </property>
+    </bean>
+
+    <!-- Activemq connection factory -->
+    <bean id="amqReceiveConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${jms.send.broker.url}"/>
+        <property name="useAsyncSend" value="false"/>
+    </bean>
+	<!-- Activemq connection factory -->
+    <bean id="amqSendConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    	<!--broker服务的地址-->
+		<property name="brokerURL" value="${jms.receive.broker.url}"/>
+        <property name="useAsyncSend" value="false"/>
+    </bean>
+
+    <!-- ConnectionFactory Definition -->
+    <bean id="receiveConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="amqReceiveConnectionFactory"/>
+    </bean>
+    
+    <bean id="sendConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="amqSendConnectionFactory"/>
+    </bean>
+
+
+    <!--  Default Destination Queue Definition-->
+    <bean id="destinationOne" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="${jms.queue1.name}"/>
+    </bean>
+    <bean id="destinationTwo" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="${jms.queue2.name}"/>
+    </bean>
+    <bean id="destinationThree" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="${jms.queue3.name}"/>
+    </bean>
+
+ <!--  OrderMessage converter  -->
+	<bean id="amqMessageConverter" class="com.activemq.utils.AmqMessageConverter"/>
+	
+
+    <!-- JmsTemplate Definition -->
+    <bean id="jmsTemplateOne" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="sendConnectionFactory"/>
+        <property name="defaultDestination" ref="destinationOne"/>
+        <property name="messageConverter" ref="amqMessageConverter"/>
+        <!-- deliveryMode, priority, timeToLive 的开关，要生效，必须配置为true，默认false-->
+        <property name="explicitQosEnabled" value="true" />  
+        <!-- 发送模式  DeliveryMode.NON_PERSISTENT=1:非持久 ; DeliveryMode.PERSISTENT=2:持久-->  
+        <property name="deliveryMode" value="2" /> 
+    </bean>
+    <bean id="jmsTemplateTwo" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="sendConnectionFactory"/>
+        <property name="defaultDestination" ref="destinationTwo"/>
+        <property name="messageConverter" ref="amqMessageConverter"/>
+        <!-- deliveryMode, priority, timeToLive 的开关，要生效，必须配置为true，默认false-->
+        <property name="explicitQosEnabled" value="true" />  
+        <!-- 发送模式  DeliveryMode.NON_PERSISTENT=1:非持久 ; DeliveryMode.PERSISTENT=2:持久-->  
+        <property name="deliveryMode" value="2" />
+    </bean>
+    <bean id="jmsTemplateThree" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="sendConnectionFactory"/>
+        <property name="defaultDestination" ref="destinationThree"/>
+        <property name="messageConverter" ref="amqMessageConverter"/>
+        <!-- deliveryMode, priority, timeToLive 的开关，要生效，必须配置为true，默认false-->
+        <property name="explicitQosEnabled" value="true" />  
+        <!-- 发送模式  DeliveryMode.NON_PERSISTENT=1:非持久 ; DeliveryMode.PERSISTENT=2:持久-->  
+        <property name="deliveryMode" value="2" />
+    </bean>
+
+<!-- 自定义发送消息对象 -->
+    <!-- Message Sender Definition -->
+    <bean id="messageSenderOne" class="com.activemq.amq.MessageSenderOne">
+        <constructor-arg index="0" ref="jmsTemplateOne"/>
+    </bean>
+    <bean id="messageSenderTwo" class="com.activemq.amq.MessageSenderTwo">
+        <constructor-arg index="0" ref="jmsTemplateTwo"/>
+    </bean>
+    <bean id="messageSenderThree" class="com.activemq.amq.MessageSenderThree">
+        <constructor-arg index="0" ref="jmsTemplateThree"/>
+    </bean>
+    
+	
+    <!-- 自定义接受消息对象 -->
+    <!-- Message Receiver Definition -->
+    <bean id="messageReceiverOne" class="com.activemq.amq.MessageReceiverOne"></bean>
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
+        <property name="connectionFactory" ref="receiveConnectionFactory"/>
+        <property name="messageConverter" ref="amqMessageConverter"/>
+        <property name="destinationName" value="${jms.queue1.name}"/>
+        <property name="messageListener" ref="messageReceiverOne"/>
+    </bean>
+    
+    <bean id="messageReceiverTwo" class="com.activemq.amq.MessageReceiverTwo"></bean>
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
+        <property name="connectionFactory" ref="receiveConnectionFactory"/>
+        <property name="messageConverter" ref="amqMessageConverter"/>
+        <property name="destinationName" value="${jms.queue2.name}"/>
+        <property name="messageListener" ref="messageReceiverTwo"/>
+    </bean>
+</beans>

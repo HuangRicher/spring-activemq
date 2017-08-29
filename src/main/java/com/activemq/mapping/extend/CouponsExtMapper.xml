@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyy.mapper.extend.CouponsExtMapper">
+  <resultMap id="BaseResultMap" type="com.qyy.entity.Coupons">
+    <id column="cpns_id" jdbcType="INTEGER" property="cpnsId" />
+    <result column="cpns_name" jdbcType="VARCHAR" property="cpnsName" />
+    <result column="cpns_sn" jdbcType="VARCHAR" property="cpnsSn" />
+    <result column="cpns_status" jdbcType="SMALLINT" property="cpnsStatus" />
+    <result column="cpns_type" jdbcType="SMALLINT" property="cpnsType" />
+    <result column="cpns_img" jdbcType="VARCHAR" property="cpnsImg" />
+    <result column="grant_type" jdbcType="SMALLINT" property="grantType" />
+    <result column="grant_num" jdbcType="INTEGER" property="grantNum" />
+    <result column="limit_get" jdbcType="INTEGER" property="limitGet" />
+    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+    <result column="end_time" jdbcType="BIGINT" property="endTime" />
+    <result column="point" jdbcType="INTEGER" property="point" />
+    <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+    <result column="order_amount_give" jdbcType="DECIMAL" property="orderAmountGive" />
+    <result column="discount_price" jdbcType="DECIMAL" property="discountPrice" />
+    <result column="add_time" jdbcType="BIGINT" property="addTime" />
+    <result column="com_id" jdbcType="INTEGER" property="comId" />
+    <result column="appoint_goods_ids" jdbcType="VARCHAR" property="appointGoodsIds" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.qyy.entity.CouponsWithBLOBs">
+    <result column="goods_ids" jdbcType="LONGVARCHAR" property="goodsIds" />
+    <result column="goods_names" jdbcType="LONGVARCHAR" property="goodsNames" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+  <resultMap extends="ResultMapWithBLOBs" id="ResultMapWithBLOBsPO" type="com.qyy.entity.po.CouponsWithBLOBsPO">
+    <result column="com_name" jdbcType="VARCHAR" property="comName" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+  </resultMap>
+ 
+  
+  <select id="selectCouponsByCpnsId" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBsPO">
+    SELECT ec.*,ifnull(ecy.com_name,'') com_name,ifnull(eb.name,'') brand_name FROM es_coupons ec 
+	LEFT JOIN es_company ecy ON ecy.com_id = ec.com_id 
+	LEFT JOIN es_brand eb ON eb.brand_id = ec.brand_id WHERE cpns_id =#{cpnsId} 
+  </select>
+  <update id="updateCoupons" parameterType="java.lang.Integer">
+  	update es_coupons set grant_num=grant_num-1 where cpns_id=#{cpnsId}
+  </update>
+</mapper>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyy.mapper.MemberCouponMapper">
+  <resultMap id="BaseResultMap" type="com.qyy.entity.MemberCoupon">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cpns_id" jdbcType="INTEGER" property="cpnsId" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="used" jdbcType="SMALLINT" property="used" />
+    <result column="get_time" jdbcType="BIGINT" property="getTime" />
+    <result column="cpns_sn" jdbcType="VARCHAR" property="cpnsSn" />
+    <result column="cpns_name" jdbcType="VARCHAR" property="cpnsName" />
+    <result column="cpns_type" jdbcType="SMALLINT" property="cpnsType" />
+    <result column="grant_type" jdbcType="SMALLINT" property="grantType" />
+    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+    <result column="order_amount" jdbcType="DECIMAL" property="orderAmount" />
+    <result column="discount_price" jdbcType="DECIMAL" property="discountPrice" />
+    <result column="end_time" jdbcType="BIGINT" property="endTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, cpns_id, member_id, used, get_time, cpns_sn, cpns_name, cpns_type, grant_type, 
+    brand_id, order_amount, discount_price, end_time
+  </sql>
+  <select id="selectByExample" parameterType="com.qyy.entity.MemberCouponExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from es_member_coupon
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from es_member_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from es_member_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qyy.entity.MemberCouponExample">
+    delete from es_member_coupon
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qyy.entity.MemberCoupon">
+    insert into es_member_coupon (id, cpns_id, member_id, 
+      used, get_time, cpns_sn, 
+      cpns_name, cpns_type, grant_type, 
+      brand_id, order_amount, discount_price, 
+      end_time)
+    values (#{id,jdbcType=INTEGER}, #{cpnsId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, 
+      #{used,jdbcType=SMALLINT}, #{getTime,jdbcType=BIGINT}, #{cpnsSn,jdbcType=VARCHAR}, 
+      #{cpnsName,jdbcType=VARCHAR}, #{cpnsType,jdbcType=SMALLINT}, #{grantType,jdbcType=SMALLINT}, 
+      #{brandId,jdbcType=INTEGER}, #{orderAmount,jdbcType=DECIMAL}, #{discountPrice,jdbcType=DECIMAL}, 
+      #{endTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qyy.entity.MemberCoupon">
+    insert into es_member_coupon
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="cpnsId != null">
+        cpns_id,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="used != null">
+        used,
+      </if>
+      <if test="getTime != null">
+        get_time,
+      </if>
+      <if test="cpnsSn != null">
+        cpns_sn,
+      </if>
+      <if test="cpnsName != null">
+        cpns_name,
+      </if>
+      <if test="cpnsType != null">
+        cpns_type,
+      </if>
+      <if test="grantType != null">
+        grant_type,
+      </if>
+      <if test="brandId != null">
+        brand_id,
+      </if>
+      <if test="orderAmount != null">
+        order_amount,
+      </if>
+      <if test="discountPrice != null">
+        discount_price,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cpnsId != null">
+        #{cpnsId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="used != null">
+        #{used,jdbcType=SMALLINT},
+      </if>
+      <if test="getTime != null">
+        #{getTime,jdbcType=BIGINT},
+      </if>
+      <if test="cpnsSn != null">
+        #{cpnsSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cpnsName != null">
+        #{cpnsName,jdbcType=VARCHAR},
+      </if>
+      <if test="cpnsType != null">
+        #{cpnsType,jdbcType=SMALLINT},
+      </if>
+      <if test="grantType != null">
+        #{grantType,jdbcType=SMALLINT},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null">
+        #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="discountPrice != null">
+        #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qyy.entity.MemberCouponExample" resultType="java.lang.Long">
+    select count(*) from es_member_coupon
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update es_member_coupon
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpnsId != null">
+        cpns_id = #{record.cpnsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.memberId != null">
+        member_id = #{record.memberId,jdbcType=INTEGER},
+      </if>
+      <if test="record.used != null">
+        used = #{record.used,jdbcType=SMALLINT},
+      </if>
+      <if test="record.getTime != null">
+        get_time = #{record.getTime,jdbcType=BIGINT},
+      </if>
+      <if test="record.cpnsSn != null">
+        cpns_sn = #{record.cpnsSn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpnsName != null">
+        cpns_name = #{record.cpnsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cpnsType != null">
+        cpns_type = #{record.cpnsType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.grantType != null">
+        grant_type = #{record.grantType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.brandId != null">
+        brand_id = #{record.brandId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderAmount != null">
+        order_amount = #{record.orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.discountPrice != null">
+        discount_price = #{record.discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update es_member_coupon
+    set id = #{record.id,jdbcType=INTEGER},
+      cpns_id = #{record.cpnsId,jdbcType=INTEGER},
+      member_id = #{record.memberId,jdbcType=INTEGER},
+      used = #{record.used,jdbcType=SMALLINT},
+      get_time = #{record.getTime,jdbcType=BIGINT},
+      cpns_sn = #{record.cpnsSn,jdbcType=VARCHAR},
+      cpns_name = #{record.cpnsName,jdbcType=VARCHAR},
+      cpns_type = #{record.cpnsType,jdbcType=SMALLINT},
+      grant_type = #{record.grantType,jdbcType=SMALLINT},
+      brand_id = #{record.brandId,jdbcType=INTEGER},
+      order_amount = #{record.orderAmount,jdbcType=DECIMAL},
+      discount_price = #{record.discountPrice,jdbcType=DECIMAL},
+      end_time = #{record.endTime,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qyy.entity.MemberCoupon">
+    update es_member_coupon
+    <set>
+      <if test="cpnsId != null">
+        cpns_id = #{cpnsId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="used != null">
+        used = #{used,jdbcType=SMALLINT},
+      </if>
+      <if test="getTime != null">
+        get_time = #{getTime,jdbcType=BIGINT},
+      </if>
+      <if test="cpnsSn != null">
+        cpns_sn = #{cpnsSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cpnsName != null">
+        cpns_name = #{cpnsName,jdbcType=VARCHAR},
+      </if>
+      <if test="cpnsType != null">
+        cpns_type = #{cpnsType,jdbcType=SMALLINT},
+      </if>
+      <if test="grantType != null">
+        grant_type = #{grantType,jdbcType=SMALLINT},
+      </if>
+      <if test="brandId != null">
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null">
+        order_amount = #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="discountPrice != null">
+        discount_price = #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qyy.entity.MemberCoupon">
+    update es_member_coupon
+    set cpns_id = #{cpnsId,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      used = #{used,jdbcType=SMALLINT},
+      get_time = #{getTime,jdbcType=BIGINT},
+      cpns_sn = #{cpnsSn,jdbcType=VARCHAR},
+      cpns_name = #{cpnsName,jdbcType=VARCHAR},
+      cpns_type = #{cpnsType,jdbcType=SMALLINT},
+      grant_type = #{grantType,jdbcType=SMALLINT},
+      brand_id = #{brandId,jdbcType=INTEGER},
+      order_amount = #{orderAmount,jdbcType=DECIMAL},
+      discount_price = #{discountPrice,jdbcType=DECIMAL},
+      end_time = #{endTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
